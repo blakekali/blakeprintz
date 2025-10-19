@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 import { Stack } from 'expo-router';
 import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
+import { TabBarVisibilityProvider } from '@/contexts/TabBarVisibilityContext';
 
 export default function TabLayout() {
   const tabs: TabBarItem[] = [
@@ -57,7 +58,7 @@ export default function TabLayout() {
   }
 
   return (
-    <>
+    <TabBarVisibilityProvider>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -70,6 +71,6 @@ export default function TabLayout() {
         <Stack.Screen name="profile" />
       </Stack>
       <FloatingTabBar tabs={tabs} />
-    </>
+    </TabBarVisibilityProvider>
   );
 }

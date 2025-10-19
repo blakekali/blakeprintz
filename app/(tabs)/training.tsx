@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
 import { colors } from '@/styles/commonStyles';
 import * as Haptics from 'expo-haptics';
+import { useTabBarVisibility } from '@/contexts/TabBarVisibilityContext';
 
 interface TrainingModule {
   id: string;
@@ -33,129 +34,63 @@ interface TrainingModule {
 const INITIAL_MODULES: TrainingModule[] = [
   {
     id: '1',
-    title: '3D Printer Safety & Maintenance',
-    description: 'Essential safety protocols and daily maintenance procedures',
-    duration: '20 min',
-    category: 'Safety',
-    completed: false,
-    progress: 0,
+    title: '3D Printing Basics',
+    description: 'Learn the fundamentals of 3D printing technology and processes',
+    duration: '45 min',
+    category: 'Beginner',
+    completed: true,
+    progress: 100,
     content: {
       sections: [
         {
-          title: 'Safety First',
-          content: 'Working with 3D printers requires attention to safety. Always ensure proper ventilation, never touch the hot end during or immediately after printing, and wear safety glasses when removing support material. Keep the work area clean and organized.',
+          title: 'Introduction',
+          content: 'Welcome to 3D printing! This module covers the basic concepts...',
         },
         {
-          title: 'Daily Maintenance',
-          content: '1. Check bed leveling before each print\n2. Clean the build plate with isopropyl alcohol\n3. Inspect nozzle for clogs or debris\n4. Verify filament is properly loaded\n5. Check all belts for proper tension\n6. Lubricate linear rails weekly',
-        },
-        {
-          title: 'Emergency Procedures',
-          content: 'In case of fire, use the emergency stop button immediately and use a Class D fire extinguisher. Never use water on electrical fires. If the printer makes unusual noises or smells, stop the print immediately and notify your supervisor.',
+          title: 'Materials',
+          content: 'Understanding different filament types and their properties...',
         },
       ],
     },
   },
   {
     id: '2',
-    title: 'Filament Types & Materials',
-    description: 'Understanding different materials and their applications',
-    duration: '25 min',
-    category: 'Technical',
+    title: 'Safety Procedures',
+    description: 'Essential safety guidelines for operating 3D printers',
+    duration: '30 min',
+    category: 'Required',
     completed: false,
     progress: 60,
     content: {
       sections: [
         {
-          title: 'Common Materials',
-          content: 'PLA (Polylactic Acid) is the most common material - easy to print, biodegradable, and great for prototypes. ABS offers higher strength and heat resistance. PETG combines the best of both with good strength and ease of printing. TPU is flexible for specialized applications.',
+          title: 'General Safety',
+          content: 'Always follow these safety guidelines when working with 3D printers...',
         },
         {
-          title: 'Material Properties',
-          content: 'PLA: Print temp 190-220°C, bed temp 50-60°C\nABS: Print temp 220-250°C, bed temp 80-110°C\nPETG: Print temp 220-250°C, bed temp 70-80°C\nTPU: Print temp 210-230°C, bed temp 30-60°C\n\nAlways check manufacturer specifications for exact temperatures.',
-        },
-        {
-          title: 'Storage & Handling',
-          content: 'Store filament in airtight containers with desiccant to prevent moisture absorption. Label all spools with material type and color. Rotate stock using FIFO method. Dry filament before use if it has been exposed to humidity.',
+          title: 'Emergency Procedures',
+          content: 'In case of emergency, follow these steps...',
         },
       ],
     },
   },
   {
     id: '3',
-    title: 'Slicing Software Basics',
-    description: 'Master the slicer software for optimal print quality',
-    duration: '30 min',
-    category: 'Technical',
+    title: 'Advanced Techniques',
+    description: 'Master advanced printing techniques and troubleshooting',
+    duration: '90 min',
+    category: 'Advanced',
     completed: false,
     progress: 0,
     content: {
       sections: [
         {
-          title: 'Introduction to Slicing',
-          content: 'Slicing software converts 3D models into instructions (G-code) that the printer can understand. We use industry-standard slicing software that offers precise control over every aspect of the print.',
+          title: 'Layer Optimization',
+          content: 'Learn how to optimize layer height and print quality...',
         },
         {
-          title: 'Software',
-          content: 'The current software we Install on all computers is Crealitys Slicer which is used by all the printers we currently have.',
-        },
-        {
-          title: 'Key Settings',
-          content: 'Layer Height: 0.1-0.3mm (lower = better quality, longer print time)\nInfill: 10-20% for most parts, 50%+ for functional parts\nSupports: Enable for overhangs greater than 45°\nPrint Speed: 40-60mm/s for quality, up to 100mm/s for drafts\nWall Thickness: Minimum 2-3 perimeters',
-        },
-        {
-          title: 'Quality Control',
-          content: 'Always preview the sliced model before printing. Check for proper support placement, verify estimated print time and material usage, and ensure the model is properly oriented on the build plate for optimal strength and surface finish.',
-        },
-      ],
-    },
-  },
-  {
-    id: '4',
-    title: 'Customer Service & Order Management',
-    description: 'Best practices for handling customer orders and inquiries',
-    duration: '18 min',
-    category: 'Customer Service',
-    completed: false,
-    progress: 0,
-    content: {
-      sections: [
-        {
-          title: 'Taking Orders',
-          content: 'When receiving a new order, verify all specifications: material type, color, quantity, and deadline. Discuss any design modifications needed for printability. Provide accurate time and cost estimates. Always confirm order details in writing.',
-        },
-        {
-          title: 'Managing Expectations',
-          content: '1. Be honest about turnaround times\n2. Explain material limitations clearly\n3. Show examples of similar work\n4. Discuss post-processing options\n5. Set realistic quality expectations\n6. Communicate any delays immediately',
-        },
-        {
-          title: 'Quality Assurance',
-          content: 'Inspect every print before delivery. Check for layer adhesion, dimensional accuracy, and surface finish. Remove all support material carefully. Clean parts with compressed air. Package items securely to prevent damage during transport.',
-        },
-      ],
-    },
-  },
-  {
-    id: '5',
-    title: 'Troubleshooting Common Issues',
-    description: 'Identify and resolve common 3D printing problems',
-    duration: '35 min',
-    category: 'Technical',
-    completed: false,
-    progress: 0,
-    content: {
-      sections: [
-        {
-          title: 'Print Adhesion Problems',
-          content: 'If prints are not sticking to the bed: Re-level the bed, clean the build surface thoroughly, increase bed temperature by 5-10°C, use adhesion aids like glue stick or hairspray, or reduce first layer speed to 20mm/s.',
-        },
-        {
-          title: 'Layer Issues',
-          content: 'Stringing: Lower print temperature, increase retraction distance\nWarping: Increase bed temperature, use enclosure, add brim\nLayer shifting: Check belt tension, reduce print speed\nUnder-extrusion: Check for clogs, increase flow rate, verify filament diameter',
-        },
-        {
-          title: 'When to Ask for Help',
-          content: 'Contact your supervisor if: The printer makes grinding or clicking noises, you smell burning plastic or electronics, the hot end temperature fluctuates wildly, you encounter repeated print failures, or you are unsure about any procedure. Safety first!',
+          title: 'Support Structures',
+          content: 'Understanding when and how to use support structures...',
         },
       ],
     },
@@ -163,6 +98,7 @@ const INITIAL_MODULES: TrainingModule[] = [
 ];
 
 export default function TrainingScreen() {
+  const { setScrollY } = useTabBarVisibility();
   const [modules, setModules] = useState<TrainingModule[]>(INITIAL_MODULES);
   const [selectedModule, setSelectedModule] = useState<TrainingModule | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -170,19 +106,19 @@ export default function TrainingScreen() {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'Customer Service':
-        return colors.primary;
-      case 'Technical':
-        return colors.secondary;
-      case 'Safety':
-        return colors.accent;
+      case 'Beginner':
+        return '#4caf50';
+      case 'Required':
+        return '#f44336';
+      case 'Advanced':
+        return '#2196f3';
       default:
-        return colors.textSecondary;
+        return colors.primary;
     }
   };
 
   const openModule = (module: TrainingModule) => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS === 'ios') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     setSelectedModule(module);
@@ -192,24 +128,19 @@ export default function TrainingScreen() {
 
   const completeModule = () => {
     if (selectedModule) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS === 'ios') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-      setModules(prevModules =>
-        prevModules.map(module =>
-          module.id === selectedModule.id
-            ? { ...module, completed: true, progress: 100 }
-            : module
-        )
-      );
+      setModules(modules.map(m =>
+        m.id === selectedModule.id ? { ...m, completed: true, progress: 100 } : m
+      ));
       setModalVisible(false);
-      setSelectedModule(null);
     }
   };
 
   const nextSection = () => {
     if (selectedModule && currentSection < selectedModule.content.sections.length - 1) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS === 'ios') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
       setCurrentSection(currentSection + 1);
@@ -218,42 +149,40 @@ export default function TrainingScreen() {
 
   const previousSection = () => {
     if (currentSection > 0) {
-      if (Platform.OS !== 'web') {
+      if (Platform.OS === 'ios') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
       setCurrentSection(currentSection - 1);
     }
   };
 
-  const completedCount = modules.filter(m => m.completed).length;
-  const totalCount = modules.length;
-  const overallProgress = (completedCount / totalCount) * 100;
+  const handleScroll = (event: any) => {
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+    setScrollY(currentScrollY);
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Training Center</Text>
-        <Text style={styles.headerSubtitle}>
-          {completedCount} of {totalCount} modules completed
-        </Text>
-      </View>
-
-      <View style={styles.progressCard}>
-        <View style={styles.progressHeader}>
-          <Text style={styles.progressTitle}>Overall Progress</Text>
-          <Text style={styles.progressPercentage}>{Math.round(overallProgress)}%</Text>
-        </View>
-        <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBar, { width: `${overallProgress}%` }]} />
+        <Text style={styles.headerTitle}>Training</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statItem}>
+            <Text style={styles.statValue}>
+              {modules.filter(m => m.completed).length}/{modules.length}
+            </Text>
+            <Text style={styles.statLabel}>Completed</Text>
+          </View>
         </View>
       </View>
 
       <ScrollView
-        style={styles.modulesList}
-        contentContainerStyle={styles.modulesListContent}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {modules.map(module => (
+        {modules.map((module) => (
           <Pressable
             key={module.id}
             style={styles.moduleCard}
@@ -291,19 +220,20 @@ export default function TrainingScreen() {
                 <Text style={styles.durationText}>{module.duration}</Text>
               </View>
 
-              {!module.completed && module.progress > 0 && (
-                <View style={styles.moduleProgressContainer}>
-                  <View style={styles.moduleProgressBar}>
-                    <View
-                      style={[
-                        styles.moduleProgressFill,
-                        { width: `${module.progress}%` },
-                      ]}
-                    />
-                  </View>
-                  <Text style={styles.moduleProgressText}>{module.progress}%</Text>
+              <View style={styles.progressContainer}>
+                <View style={styles.progressBar}>
+                  <View
+                    style={[
+                      styles.progressFill,
+                      {
+                        width: `${module.progress}%`,
+                        backgroundColor: getCategoryColor(module.category),
+                      },
+                    ]}
+                  />
                 </View>
-              )}
+                <Text style={styles.progressText}>{module.progress}%</Text>
+              </View>
             </View>
           </Pressable>
         ))}
@@ -312,83 +242,75 @@ export default function TrainingScreen() {
       <Modal
         visible={modalVisible}
         animationType="slide"
-        transparent={false}
+        transparent={true}
         onRequestClose={() => setModalVisible(false)}
       >
-        <SafeAreaView style={styles.modalContainer} edges={['top', 'bottom']}>
-          {selectedModule && (
-            <>
-              <View style={styles.modalHeader}>
-                <Pressable
-                  onPress={() => setModalVisible(false)}
-                  style={styles.closeButton}
-                >
-                  <IconSymbol name="xmark" size={24} color={colors.text} />
-                </Pressable>
-                <Text style={styles.modalTitle}>{selectedModule.title}</Text>
-                <View style={{ width: 24 }} />
-              </View>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {selectedModule && (
+              <>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>{selectedModule.title}</Text>
+                  <Pressable onPress={() => setModalVisible(false)}>
+                    <IconSymbol name="xmark.circle.fill" size={28} color={colors.textSecondary} />
+                  </Pressable>
+                </View>
 
-              <View style={styles.sectionIndicator}>
-                <Text style={styles.sectionIndicatorText}>
-                  Section {currentSection + 1} of {selectedModule.content.sections.length}
-                </Text>
-              </View>
+                <ScrollView style={styles.modalBody}>
+                  <View style={styles.sectionIndicator}>
+                    <Text style={styles.sectionNumber}>
+                      Section {currentSection + 1} of {selectedModule.content.sections.length}
+                    </Text>
+                  </View>
 
-              <ScrollView
-                style={styles.contentContainer}
-                contentContainerStyle={styles.contentContainerInner}
-              >
-                <Text style={styles.sectionTitle}>
-                  {selectedModule.content.sections[currentSection].title}
-                </Text>
-                <Text style={styles.sectionContent}>
-                  {selectedModule.content.sections[currentSection].content}
-                </Text>
-              </ScrollView>
-
-              <View style={styles.navigationButtons}>
-                <Pressable
-                  style={[
-                    styles.navButton,
-                    currentSection === 0 && styles.navButtonDisabled,
-                  ]}
-                  onPress={previousSection}
-                  disabled={currentSection === 0}
-                >
-                  <IconSymbol
-                    name="chevron.left"
-                    size={20}
-                    color={currentSection === 0 ? colors.textSecondary : colors.primary}
-                  />
-                  <Text
-                    style={[
-                      styles.navButtonText,
-                      currentSection === 0 && styles.navButtonTextDisabled,
-                    ]}
-                  >
-                    Previous
+                  <Text style={styles.sectionTitle}>
+                    {selectedModule.content.sections[currentSection].title}
                   </Text>
-                </Pressable>
+                  <Text style={styles.sectionContent}>
+                    {selectedModule.content.sections[currentSection].content}
+                  </Text>
+                </ScrollView>
 
-                {currentSection === selectedModule.content.sections.length - 1 ? (
+                <View style={styles.modalFooter}>
                   <Pressable
-                    style={[styles.navButton, styles.completeButton]}
-                    onPress={completeModule}
+                    style={[
+                      styles.navButton,
+                      currentSection === 0 && styles.navButtonDisabled,
+                    ]}
+                    onPress={previousSection}
+                    disabled={currentSection === 0}
                   >
-                    <Text style={styles.completeButtonText}>Complete Module</Text>
-                    <IconSymbol name="checkmark" size={20} color="#ffffff" />
+                    <IconSymbol
+                      name="chevron.left"
+                      size={20}
+                      color={currentSection === 0 ? colors.textSecondary : colors.primary}
+                    />
+                    <Text
+                      style={[
+                        styles.navButtonText,
+                        currentSection === 0 && styles.navButtonTextDisabled,
+                      ]}
+                    >
+                      Previous
+                    </Text>
                   </Pressable>
-                ) : (
-                  <Pressable style={styles.navButton} onPress={nextSection}>
-                    <Text style={styles.navButtonText}>Next</Text>
-                    <IconSymbol name="chevron.right" size={20} color={colors.primary} />
-                  </Pressable>
-                )}
-              </View>
-            </>
-          )}
-        </SafeAreaView>
+
+                  {currentSection === selectedModule.content.sections.length - 1 ? (
+                    <Pressable style={styles.completeButton} onPress={completeModule}>
+                      <Text style={styles.completeButtonText}>Complete Module</Text>
+                      <IconSymbol name="checkmark.circle.fill" size={20} color="#ffffff" />
+                    </Pressable>
+                  ) : (
+                    <Pressable style={styles.navButton} onPress={nextSection}>
+                      <Text style={styles.navButtonText}>Next</Text>
+                      <IconSymbol name="chevron.right" size={20} color={colors.primary} />
+                    </Pressable>
+                  )}
+                </View>
+              </>
+            )}
+          </View>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -401,67 +323,49 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
+    paddingVertical: 16,
   },
   headerTitle: {
     fontSize: 32,
     fontWeight: '700',
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: 12,
   },
-  headerSubtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
+  statsContainer: {
+    flexDirection: 'row',
+    gap: 16,
   },
-  progressCard: {
+  statItem: {
     backgroundColor: colors.card,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    padding: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderRadius: 12,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
     elevation: 2,
   },
-  progressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  progressTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  progressPercentage: {
-    fontSize: 24,
+  statValue: {
+    fontSize: 20,
     fontWeight: '700',
     color: colors.primary,
+    marginBottom: 4,
   },
-  progressBarContainer: {
-    height: 8,
-    backgroundColor: colors.highlight,
-    borderRadius: 4,
-    overflow: 'hidden',
+  statLabel: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: '500',
   },
-  progressBar: {
-    height: '100%',
-    backgroundColor: colors.primary,
-    borderRadius: 4,
-  },
-  modulesList: {
+  scrollView: {
     flex: 1,
   },
-  modulesListContent: {
+  scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 100,
+    paddingBottom: 100,
   },
   moduleCard: {
     backgroundColor: colors.card,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 16,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
     elevation: 2,
   },
@@ -474,14 +378,18 @@ const styles = StyleSheet.create({
   categoryBadge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   categoryText: {
     fontSize: 12,
     fontWeight: '600',
   },
   completedBadge: {
-    flexDirection: 'row',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#4caf50' + '20',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   moduleTitle: {
@@ -494,12 +402,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textSecondary,
     lineHeight: 20,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   moduleFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    gap: 12,
   },
   durationContainer: {
     flexDirection: 'row',
@@ -509,71 +415,77 @@ const styles = StyleSheet.create({
   durationText: {
     fontSize: 14,
     color: colors.textSecondary,
+    fontWeight: '500',
   },
-  moduleProgressContainer: {
+  progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 12,
   },
-  moduleProgressBar: {
-    width: 60,
-    height: 6,
-    backgroundColor: colors.highlight,
-    borderRadius: 3,
+  progressBar: {
+    flex: 1,
+    height: 8,
+    backgroundColor: colors.border,
+    borderRadius: 4,
     overflow: 'hidden',
   },
-  moduleProgressFill: {
+  progressFill: {
     height: '100%',
-    backgroundColor: colors.secondary,
-    borderRadius: 3,
+    borderRadius: 4,
   },
-  moduleProgressText: {
-    fontSize: 12,
+  progressText: {
+    fontSize: 14,
     fontWeight: '600',
-    color: colors.textSecondary,
+    color: colors.text,
+    minWidth: 40,
+    textAlign: 'right',
   },
-  modalContainer: {
+  modalOverlay: {
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
     backgroundColor: colors.background,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    height: '90%',
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.highlight,
-  },
-  closeButton: {
-    padding: 4,
+    marginBottom: 20,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: '700',
     color: colors.text,
     flex: 1,
-    textAlign: 'center',
+    marginRight: 12,
+  },
+  modalBody: {
+    flex: 1,
+    paddingHorizontal: 20,
   },
   sectionIndicator: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.card,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+    marginBottom: 16,
   },
-  sectionIndicatorText: {
-    fontSize: 14,
+  sectionNumber: {
+    fontSize: 12,
     fontWeight: '600',
     color: colors.primary,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    flex: 1,
-  },
-  contentContainerInner: {
-    padding: 20,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     color: colors.text,
     marginBottom: 16,
@@ -583,30 +495,24 @@ const styles = StyleSheet.create({
     color: colors.text,
     lineHeight: 24,
   },
-  navigationButtons: {
+  modalFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingTop: 20,
     borderTopWidth: 1,
-    borderTopColor: colors.highlight,
-    gap: 12,
+    borderTopColor: colors.border,
   },
   navButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 8,
+    paddingHorizontal: 16,
     paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: 12,
     backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    flex: 1,
   },
   navButtonDisabled: {
-    borderColor: colors.textSecondary,
     opacity: 0.5,
   },
   navButtonText: {
@@ -618,12 +524,17 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   completeButton: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: '#4caf50',
   },
   completeButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#ffffff',
   },
 });

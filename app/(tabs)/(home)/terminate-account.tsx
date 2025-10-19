@@ -18,6 +18,7 @@ import { colors } from '@/styles/commonStyles';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTabBarVisibility } from '@/contexts/TabBarVisibilityContext';
 
 interface User {
   id: string;
@@ -29,6 +30,7 @@ interface User {
 
 export default function TerminateAccountScreen() {
   const { user: currentUser } = useAuth();
+  const { setScrollY } = useTabBarVisibility();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,7 +55,7 @@ export default function TerminateAccountScreen() {
     loadUsers();
   }, [loadUsers]);
 
-  const handleTerminate = (user: User) => {
+  const handleTerminate = async (user: User) => {
     if (Platform.OS === 'ios') {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     }
@@ -65,26 +67,41 @@ export default function TerminateAccountScreen() {
         {
           text: 'Cancel',
           style: 'cancel',
+          onPress: () => {
+            console.log('Termination cancelled');
+          },
         },
         {
           text: 'Terminate',
           style: 'destructive',
           onPress: async () => {
+            console.log('Starting termination process for user:', user.id);
             try {
               const usersData = await AsyncStorage.getItem('users');
+              console.log('Current users data:', usersData);
+              
               if (usersData) {
                 const allUsers = JSON.parse(usersData);
+                console.log('All users before deletion:', allUsers.length);
+                
                 const updatedUsers = allUsers.filter((u: User) => u.id !== user.id);
+                console.log('All users after deletion:', updatedUsers.length);
+                
                 await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
+                console.log('Users saved to AsyncStorage');
                 
                 // Update local state
-                setUsers(updatedUsers.filter((u: User) => u.id !== currentUser?.id));
+                const otherUsers = updatedUsers.filter((u: User) => u.id !== currentUser?.id);
+                setUsers(otherUsers);
                 
                 if (Platform.OS === 'ios') {
                   Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                 }
                 
                 Alert.alert('Success', `${user.name}'s account has been terminated`);
+              } else {
+                console.log('No users data found in AsyncStorage');
+                Alert.alert('Error', 'No users data found');
               }
             } catch (error) {
               console.log('Error terminating account:', error);
@@ -116,6 +133,11 @@ export default function TerminateAccountScreen() {
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.staffId.includes(searchQuery)
   );
+
+  const handleScroll = (event: any) => {
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+    setScrollY(currentScrollY);
+  };
 
   if (loading) {
     return (
@@ -166,6 +188,8 @@ export default function TerminateAccountScreen() {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         >
           {filteredUsers.length === 0 ? (
             <View style={styles.emptyState}>
@@ -203,7 +227,10 @@ export default function TerminateAccountScreen() {
                   </View>
                 </View>
                 <Pressable
-                  style={styles.terminateButton}
+                  style={({ pressed }) => [
+                    styles.terminateButton,
+                    pressed && styles.terminateButtonPressed,
+                  ]}
                   onPress={() => handleTerminate(user)}
                 >
                   <IconSymbol name="trash.fill" size={20} color="#ffffff" />
@@ -354,6 +381,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 12,
     gap: 8,
+  },
+  terminateButtonPressed: {
+    backgroundColor: '#d32f2f',
+    opacity: 0.8,
   },
   terminateButtonText: {
     fontSize: 16,

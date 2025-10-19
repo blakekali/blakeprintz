@@ -16,9 +16,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
   interpolate,
 } from 'react-native-reanimated';
 import { colors } from '@/styles/commonStyles';
+import { useTabBarVisibility } from '@/contexts/TabBarVisibilityContext';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -45,6 +47,7 @@ export default function FloatingTabBar({
   const router = useRouter();
   const pathname = usePathname();
   const animatedValue = useSharedValue(0);
+  const { tabBarTranslateY } = useTabBarVisibility();
 
   const activeTabIndex = React.useMemo(() => {
     let bestMatch = -1;
@@ -101,6 +104,18 @@ export default function FloatingTabBar({
     };
   });
 
+  const containerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: withTiming(tabBarTranslateY.value, {
+            duration: 300,
+          }),
+        },
+      ],
+    };
+  });
+
   const dynamicStyles = {
     blurContainer: {
       ...styles.blurContainer,
@@ -131,54 +146,56 @@ export default function FloatingTabBar({
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
-      <View style={[
-        styles.container,
-        {
-          width: containerWidth,
-          marginBottom: bottomMargin ?? (Platform.OS === 'ios' ? 10 : 20)
-        }
-      ]}>
-        <BlurView
-          intensity={Platform.OS === 'web' ? 0 : 80}
-          style={[dynamicStyles.blurContainer, { borderRadius }]}
-        >
-          <View style={dynamicStyles.background} />
-          <Animated.View style={[dynamicStyles.indicator, indicatorStyle]} />
-          <View style={styles.tabsContainer}>
-            {tabs.map((tab, index) => {
-              const isActive = activeTabIndex === index;
+    <Animated.View style={[styles.safeArea, containerAnimatedStyle]}>
+      <SafeAreaView style={styles.safeAreaInner} edges={['bottom']}>
+        <View style={[
+          styles.container,
+          {
+            width: containerWidth,
+            marginBottom: bottomMargin ?? (Platform.OS === 'ios' ? 10 : 20)
+          }
+        ]}>
+          <BlurView
+            intensity={Platform.OS === 'web' ? 0 : 80}
+            style={[dynamicStyles.blurContainer, { borderRadius }]}
+          >
+            <View style={dynamicStyles.background} />
+            <Animated.View style={[dynamicStyles.indicator, indicatorStyle]} />
+            <View style={styles.tabsContainer}>
+              {tabs.map((tab, index) => {
+                const isActive = activeTabIndex === index;
 
-              return (
-                <TouchableOpacity
-                  key={tab.name}
-                  style={styles.tab}
-                  onPress={() => handleTabPress(tab.route)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.tabContent}>
-                    <IconSymbol
-                      name={tab.icon}
-                      size={24}
-                      color={isActive ? colors.primary : colors.textSecondary}
-                    />
-                    <Text
-                      style={[
-                        styles.tabLabel,
-                        { color: colors.textSecondary },
-                        isActive && { color: colors.primary, fontWeight: '600' },
-                      ]}
-                    >
-                      {tab.label}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </BlurView>
-      </View>
-    </SafeAreaView>
+                return (
+                  <TouchableOpacity
+                    key={tab.name}
+                    style={styles.tab}
+                    onPress={() => handleTabPress(tab.route)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.tabContent}>
+                      <IconSymbol
+                        name={tab.icon}
+                        size={24}
+                        color={isActive ? colors.primary : colors.textSecondary}
+                      />
+                      <Text
+                        style={[
+                          styles.tabLabel,
+                          { color: colors.textSecondary },
+                          isActive && { color: colors.primary, fontWeight: '600' },
+                        ]}
+                      >
+                        {tab.label}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </BlurView>
+        </View>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
 
@@ -189,6 +206,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1000,
+    alignItems: 'center',
+  },
+  safeAreaInner: {
+    width: '100%',
     alignItems: 'center',
   },
   container: {

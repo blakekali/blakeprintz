@@ -1,302 +1,298 @@
 
-import { SafeAreaView } from "react-native-safe-area-context";
-import { IconSymbol } from "@/components/IconSymbol";
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Platform, Pressable, Alert } from "react-native";
-import { colors } from "@/styles/commonStyles";
-import * as Haptics from "expo-haptics";
-import { useAuth } from "@/contexts/AuthContext";
-import { LinearGradient } from "expo-linear-gradient";
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '@/contexts/AuthContext';
+import { colors } from '@/styles/commonStyles';
+import { LinearGradient } from 'expo-linear-gradient';
+import { IconSymbol } from '@/components/IconSymbol';
+import * as Haptics from 'expo-haptics';
+import { useTabBarVisibility } from '@/contexts/TabBarVisibilityContext';
+
+export default function ProfileScreen() {
+  const { user, signOut } = useAuth();
+  const { setScrollY } = useTabBarVisibility();
+
+  const handlePress = (action: string) => {
+    if (Platform.OS === 'ios') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+
+    switch (action) {
+      case 'edit':
+        Alert.alert('Edit Profile', 'Profile editing coming soon!');
+        break;
+      case 'settings':
+        Alert.alert('Settings', 'Settings page coming soon!');
+        break;
+      case 'help':
+        Alert.alert('Help & Support', 'Help center coming soon!');
+        break;
+      case 'logout':
+        Alert.alert(
+          'Sign Out',
+          'Are you sure you want to sign out?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Sign Out',
+              style: 'destructive',
+              onPress: () => signOut(),
+            },
+          ]
+        );
+        break;
+    }
+  };
+
+  const handleScroll = (event: any) => {
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+    setScrollY(currentScrollY);
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        <LinearGradient
+          colors={[colors.primary, colors.secondary]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.profileHeader}
+        >
+          <View style={styles.avatarContainer}>
+            <IconSymbol name="person.fill" size={48} color="#ffffff" />
+          </View>
+          <Text style={styles.userName}>{user?.name}</Text>
+          <Text style={styles.userEmail}>{user?.email}</Text>
+          <View style={styles.roleBadge}>
+            <Text style={styles.roleText}>{user?.role}</Text>
+          </View>
+        </LinearGradient>
+
+        <View style={styles.infoSection}>
+          <View style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <View style={styles.infoIconContainer}>
+                <IconSymbol name="number" size={20} color={colors.primary} />
+              </View>
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Staff ID</Text>
+                <Text style={styles.infoValue}>{user?.staffId}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.menuSection}>
+          <Text style={styles.sectionTitle}>Account</Text>
+          
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('edit')}
+          >
+            <View style={styles.menuIconContainer}>
+              <IconSymbol name="pencil" size={22} color={colors.primary} />
+            </View>
+            <Text style={styles.menuText}>Edit Profile</Text>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('settings')}
+          >
+            <View style={styles.menuIconContainer}>
+              <IconSymbol name="gearshape.fill" size={22} color={colors.primary} />
+            </View>
+            <Text style={styles.menuText}>Settings</Text>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
+
+        <View style={styles.menuSection}>
+          <Text style={styles.sectionTitle}>Support</Text>
+          
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('help')}
+          >
+            <View style={styles.menuIconContainer}>
+              <IconSymbol name="questionmark.circle.fill" size={22} color={colors.primary} />
+            </View>
+            <Text style={styles.menuText}>Help & Support</Text>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
+
+        <View style={styles.menuSection}>
+          <Pressable
+            style={[styles.menuItem, styles.logoutItem]}
+            onPress={() => handlePress('logout')}
+          >
+            <View style={[styles.menuIconContainer, styles.logoutIconContainer]}>
+              <IconSymbol name="arrow.right.square.fill" size={22} color="#f44336" />
+            </View>
+            <Text style={[styles.menuText, styles.logoutText]}>Sign Out</Text>
+            <IconSymbol name="chevron.right" size={20} color="#f44336" />
+          </Pressable>
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>BlakePrintz v1.0.0</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
+  scrollView: {
+    flex: 1,
+  },
   scrollContent: {
     paddingBottom: 100,
   },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 30,
-  },
-  headerGradient: {
-    borderRadius: 20,
-    padding: 24,
+  profileHeader: {
     alignItems: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
   avatarContainer: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
     borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   userName: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#ffffff',
     marginBottom: 4,
   },
-  userRole: {
+  userEmail: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.9)',
-    fontWeight: '600',
-  },
-  userStaffId: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginTop: 4,
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginTop: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.text,
     marginBottom: 12,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    gap: 12,
+  roleBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  roleText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  infoSection: {
+    paddingHorizontal: 20,
     marginBottom: 24,
   },
-  statCard: {
-    flex: 1,
+  infoCard: {
     backgroundColor: colors.card,
     borderRadius: 16,
     padding: 16,
-    alignItems: 'center',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
     elevation: 2,
   },
-  statValue: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: colors.primary,
-    marginTop: 8,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  card: {
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 2,
-  },
-  cardHeader: {
+  infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginBottom: 12,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  certificationItem: {
-    flexDirection: 'row',
+  infoIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.primary + '20',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 8,
-    gap: 12,
   },
-  certificationText: {
+  infoContent: {
     flex: 1,
+  },
+  infoLabel: {
     fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 18,
+    fontWeight: '600',
     color: colors.text,
+  },
+  menuSection: {
+    paddingHorizontal: 20,
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 8,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    gap: 12,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
     elevation: 2,
   },
-  menuItemLeft: {
-    flexDirection: 'row',
+  menuIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.primary + '20',
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
   },
-  menuItemText: {
+  menuText: {
+    flex: 1,
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
   },
-  signOutButton: {
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    marginTop: 8,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 2,
+  logoutItem: {
+    borderWidth: 1,
+    borderColor: '#f4433620',
   },
-  signOutButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#ffffff',
+  logoutIconContainer: {
+    backgroundColor: '#f4433620',
+  },
+  logoutText: {
+    color: '#f44336',
+  },
+  footer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  footerText: {
+    fontSize: 12,
+    color: colors.textSecondary,
   },
 });
-
-export default function ProfileScreen() {
-  const { user, signOut } = useAuth();
-
-  const handlePress = (action: string) => {
-    if (Platform.OS === 'ios') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-    console.log(`Action pressed: ${action}`);
-    
-    if (action === 'signout') {
-      Alert.alert(
-        'Sign Out',
-        'Are you sure you want to sign out?',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Sign Out',
-            style: 'destructive',
-            onPress: async () => {
-              try {
-                await signOut();
-              } catch (error) {
-                console.log('Sign out error:', error);
-                Alert.alert('Error', 'Failed to sign out');
-              }
-            },
-          },
-        ]
-      );
-    }
-  };
-
-  return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <View style={styles.header}>
-          <LinearGradient
-            colors={['#1a237e', '#0d47a1', '#01579b']}
-            style={styles.headerGradient}
-          >
-            <View style={styles.avatarContainer}>
-              <IconSymbol name="person.fill" size={50} color="#ffffff" />
-            </View>
-            <Text style={styles.userName}>{user?.name || 'Staff Member'}</Text>
-            <Text style={styles.userRole}>{user?.role || 'Staff'}</Text>
-            <Text style={styles.userStaffId}>ID: {user?.staffId || 'N/A'}</Text>
-          </LinearGradient>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Performance</Text>
-          <View style={styles.statsContainer}>
-            <View style={styles.statCard}>
-              <IconSymbol name="checkmark.circle.fill" size={32} color={colors.primary} />
-              <Text style={styles.statValue}>47</Text>
-              <Text style={styles.statLabel}>Orders Completed</Text>
-            </View>
-            <View style={styles.statCard}>
-              <IconSymbol name="clock.fill" size={32} color={colors.secondary} />
-              <Text style={styles.statValue}>156h</Text>
-              <Text style={styles.statLabel}>Print Time</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Certifications</Text>
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <IconSymbol name="rosette" size={24} color={colors.primary} />
-              <Text style={styles.cardTitle}>Completed Training</Text>
-            </View>
-            <View style={styles.certificationItem}>
-              <IconSymbol name="checkmark.seal.fill" size={20} color="#4caf50" />
-              <Text style={styles.certificationText}>3D Printer Safety</Text>
-            </View>
-            <View style={styles.certificationItem}>
-              <IconSymbol name="checkmark.seal.fill" size={20} color="#4caf50" />
-              <Text style={styles.certificationText}>Material Handling</Text>
-            </View>
-            <View style={styles.certificationItem}>
-              <IconSymbol name="checkmark.seal.fill" size={20} color="#4caf50" />
-              <Text style={styles.certificationText}>Slicing Software Basics</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Settings</Text>
-          
-          <Pressable 
-            style={styles.menuItem}
-            onPress={() => handlePress('notifications')}
-          >
-            <View style={styles.menuItemLeft}>
-              <IconSymbol name="bell.fill" size={24} color={colors.primary} />
-              <Text style={styles.menuItemText}>Notifications</Text>
-            </View>
-            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
-          </Pressable>
-
-          <Pressable 
-            style={styles.menuItem}
-            onPress={() => handlePress('preferences')}
-          >
-            <View style={styles.menuItemLeft}>
-              <IconSymbol name="gearshape.fill" size={24} color={colors.primary} />
-              <Text style={styles.menuItemText}>Preferences</Text>
-            </View>
-            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
-          </Pressable>
-
-          <Pressable 
-            style={styles.menuItem}
-            onPress={() => handlePress('help')}
-          >
-            <View style={styles.menuItemLeft}>
-              <IconSymbol name="questionmark.circle.fill" size={24} color={colors.primary} />
-              <Text style={styles.menuItemText}>Help & Support</Text>
-            </View>
-            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
-          </Pressable>
-
-          <Pressable 
-            style={styles.signOutButton}
-            onPress={() => handlePress('signout')}
-          >
-            <IconSymbol name="rectangle.portrait.and.arrow.right" size={24} color="#ffffff" />
-            <Text style={styles.signOutButtonText}>Sign Out</Text>
-          </Pressable>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
