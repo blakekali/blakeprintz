@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -33,11 +33,7 @@ export default function TerminateAccountScreen() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       const usersData = await AsyncStorage.getItem('users');
       if (usersData) {
@@ -51,7 +47,11 @@ export default function TerminateAccountScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUser?.id]);
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
 
   const handleTerminate = (user: User) => {
     if (Platform.OS === 'ios') {

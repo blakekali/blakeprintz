@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface User {
@@ -37,7 +37,7 @@ const TEST_USERS = [
     name: 'John',
     staffId: '00002',
     role: 'Staff',
-		 },
+  },
   {
     id: '3',
     email: 'sarah@blakeprintz.com',
@@ -52,11 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    initializeTestUsers();
-  }, []);
-
-  const initializeTestUsers = async () => {
+  const initializeTestUsers = useCallback(async () => {
     try {
       // Check if users have been initialized
       const initialized = await AsyncStorage.getItem('users_initialized');
@@ -74,7 +70,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Error initializing test users:', error);
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    initializeTestUsers();
+  }, [initializeTestUsers]);
 
   const loadUser = async () => {
     try {

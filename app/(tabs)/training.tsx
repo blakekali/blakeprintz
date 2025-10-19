@@ -96,7 +96,7 @@ const INITIAL_MODULES: TrainingModule[] = [
           content: 'Slicing software converts 3D models into instructions (G-code) that the printer can understand. We use industry-standard slicing software that offers precise control over every aspect of the print.',
         },
         {
-					 title: 'Software',
+          title: 'Software',
           content: 'The current software we Install on all computers is Crealitys Slicer which is used by all the printers we currently have.',
         },
         {
