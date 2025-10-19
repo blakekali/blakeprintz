@@ -72,6 +72,16 @@ const INITIAL_ORDERS: Order[] = [
     total: 210.00,
     status: 'printing',
     date: new Date().toLocaleDateString(),
+		  },
+  {
+    id: '1BP-001',
+    customerName: 'Sarah Jenkinson',
+    items: 'GhostKeychain',
+    material: 'PLA',
+    printTime: '32m',
+    total: 5.00,
+    status: 'Pending',
+    date: new Date().toLocaleDateString(),
   },
 ];
 

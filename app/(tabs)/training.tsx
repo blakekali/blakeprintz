@@ -37,8 +37,8 @@ const INITIAL_MODULES: TrainingModule[] = [
     description: 'Essential safety protocols and daily maintenance procedures',
     duration: '20 min',
     category: 'Safety',
-    completed: true,
-    progress: 100,
+    completed: false,
+    progress: 0,
     content: {
       sections: [
         {
@@ -94,6 +94,10 @@ const INITIAL_MODULES: TrainingModule[] = [
         {
           title: 'Introduction to Slicing',
           content: 'Slicing software converts 3D models into instructions (G-code) that the printer can understand. We use industry-standard slicing software that offers precise control over every aspect of the print.',
+        },
+        {
+					 title: 'Software',
+          content: 'The current software we Install on all computers is Crealitys Slicer which is used by all the printers we currently have.',
         },
         {
           title: 'Key Settings',
