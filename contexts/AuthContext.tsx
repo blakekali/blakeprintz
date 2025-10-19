@@ -20,13 +20,53 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Pre-seeded test users
+const TEST_USERS = [
+  {
+    id: '1',
+    email: 'blake@blakeprintz.com',
+    password: 'password123',
+    name: 'Blake Printz',
+    staffId: '10001',
+    role: 'Admin',
+  },
+  {
+    id: '2',
+    email: 'john@blakeprintz.com',
+    password: 'password123',
+    name: 'John',
+    staffId: '32112',
+    role: 'Staff',
+  },
+];
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadUser();
+    initializeTestUsers();
   }, []);
+
+  const initializeTestUsers = async () => {
+    try {
+      // Check if users have been initialized
+      const initialized = await AsyncStorage.getItem('users_initialized');
+      
+      if (!initialized) {
+        // First time setup - seed test users
+        await AsyncStorage.setItem('users', JSON.stringify(TEST_USERS));
+        await AsyncStorage.setItem('users_initialized', 'true');
+        console.log('Test users initialized successfully');
+      }
+      
+      // Load current user if exists
+      await loadUser();
+    } catch (error) {
+      console.log('Error initializing test users:', error);
+      setIsLoading(false);
+    }
+  };
 
   const loadUser = async () => {
     try {
@@ -43,8 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      // Simulate API call - In production, this would call your backend
-      // For now, we'll check against stored users
+      // Get stored users
       const usersData = await AsyncStorage.getItem('users');
       const users = usersData ? JSON.parse(usersData) : [];
       
@@ -56,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { password: _, ...userWithoutPassword } = foundUser;
         setUser(userWithoutPassword);
         await AsyncStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        console.log('User signed in successfully:', userWithoutPassword.email);
       } else {
         throw new Error('Invalid email or password');
       }
@@ -67,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string, staffId: string) => {
     try {
-      // Simulate API call - In production, this would call your backend
+      // Get stored users
       const usersData = await AsyncStorage.getItem('users');
       const users = usersData ? JSON.parse(usersData) : [];
 
@@ -98,6 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { password: _, ...userWithoutPassword } = newUser;
       setUser(userWithoutPassword);
       await AsyncStorage.setItem('user', JSON.stringify(userWithoutPassword));
+      console.log('User signed up successfully:', userWithoutPassword.email);
     } catch (error) {
       console.log('Sign up error:', error);
       throw error;
@@ -108,6 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await AsyncStorage.removeItem('user');
       setUser(null);
+      console.log('User signed out successfully');
     } catch (error) {
       console.log('Sign out error:', error);
       throw error;
