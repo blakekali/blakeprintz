@@ -12,7 +12,7 @@ export default function HomeScreen() {
       {Platform.OS === 'ios' && (
         <Stack.Screen
           options={{
-            title: "Staff Dashboard",
+            title: "3D Print Dashboard",
           }}
         />
       )}
@@ -23,23 +23,23 @@ export default function HomeScreen() {
       >
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Welcome Back!</Text>
-          <Text style={styles.headerSubtitle}>Staff Management Dashboard</Text>
+          <Text style={styles.headerSubtitle}>3D Printing Business Dashboard</Text>
         </View>
 
         <View style={styles.quickStats}>
           <View style={styles.statCard}>
             <View style={[styles.statIcon, { backgroundColor: colors.primary + '20' }]}>
-              <IconSymbol name="cart.fill" size={28} color={colors.primary} />
+              <IconSymbol name="cube.fill" size={28} color={colors.primary} />
             </View>
-            <Text style={styles.statValue}>12</Text>
-            <Text style={styles.statLabel}>Active Orders</Text>
+            <Text style={styles.statValue}>4</Text>
+            <Text style={styles.statLabel}>Active Prints</Text>
           </View>
 
           <View style={styles.statCard}>
             <View style={[styles.statIcon, { backgroundColor: colors.secondary + '20' }]}>
               <IconSymbol name="book.fill" size={28} color={colors.secondary} />
             </View>
-            <Text style={styles.statValue}>4</Text>
+            <Text style={styles.statValue}>5</Text>
             <Text style={styles.statLabel}>Training Modules</Text>
           </View>
         </View>
@@ -50,12 +50,12 @@ export default function HomeScreen() {
           <View style={styles.actionCard}>
             <View style={styles.actionContent}>
               <View style={[styles.actionIcon, { backgroundColor: colors.primary + '20' }]}>
-                <IconSymbol name="cart.fill" size={24} color={colors.primary} />
+                <IconSymbol name="cube.fill" size={24} color={colors.primary} />
               </View>
               <View style={styles.actionText}>
-                <Text style={styles.actionTitle}>Manage Orders</Text>
+                <Text style={styles.actionTitle}>Manage Print Orders</Text>
                 <Text style={styles.actionDescription}>
-                  View and update order status, process customer requests
+                  View and update print job status, track materials and time
                 </Text>
               </View>
             </View>
@@ -69,7 +69,7 @@ export default function HomeScreen() {
               <View style={styles.actionText}>
                 <Text style={styles.actionTitle}>Complete Training</Text>
                 <Text style={styles.actionDescription}>
-                  Access training modules and improve your skills
+                  Learn about 3D printing techniques, safety, and best practices
                 </Text>
               </View>
             </View>
@@ -82,7 +82,7 @@ export default function HomeScreen() {
           <View style={styles.activityCard}>
             <View style={styles.activityDot} />
             <View style={styles.activityContent}>
-              <Text style={styles.activityTitle}>Order #001 completed</Text>
+              <Text style={styles.activityTitle}>Order #3DP-003 completed</Text>
               <Text style={styles.activityTime}>2 hours ago</Text>
             </View>
           </View>
@@ -90,7 +90,7 @@ export default function HomeScreen() {
           <View style={styles.activityCard}>
             <View style={styles.activityDot} />
             <View style={styles.activityContent}>
-              <Text style={styles.activityTitle}>Training module completed</Text>
+              <Text style={styles.activityTitle}>Safety training module completed</Text>
               <Text style={styles.activityTime}>5 hours ago</Text>
             </View>
           </View>
@@ -98,16 +98,46 @@ export default function HomeScreen() {
           <View style={styles.activityCard}>
             <View style={styles.activityDot} />
             <View style={styles.activityContent}>
-              <Text style={styles.activityTitle}>Order #002 in progress</Text>
+              <Text style={styles.activityTitle}>New order #3DP-004 started printing</Text>
               <Text style={styles.activityTime}>1 day ago</Text>
             </View>
+          </View>
+        </View>
+
+        <View style={styles.printerStatus}>
+          <Text style={styles.sectionTitle}>Printer Status</Text>
+          
+          <View style={styles.printerCard}>
+            <View style={styles.printerHeader}>
+              <View style={styles.printerInfo}>
+                <IconSymbol name="printer.fill" size={20} color={colors.primary} />
+                <Text style={styles.printerName}>Printer 1 - Prusa i3 MK3S+</Text>
+              </View>
+              <View style={[styles.statusDot, { backgroundColor: '#4caf50' }]} />
+            </View>
+            <Text style={styles.printerStatus}>Printing: Robot Arm Components</Text>
+            <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBar, { width: '65%' }]} />
+            </View>
+            <Text style={styles.printerTime}>2h 15m remaining</Text>
+          </View>
+
+          <View style={styles.printerCard}>
+            <View style={styles.printerHeader}>
+              <View style={styles.printerInfo}>
+                <IconSymbol name="printer.fill" size={20} color={colors.primary} />
+                <Text style={styles.printerName}>Printer 2 - Ender 3 V2</Text>
+              </View>
+              <View style={[styles.statusDot, { backgroundColor: '#ff9800' }]} />
+            </View>
+            <Text style={styles.printerStatus}>Idle - Ready for next job</Text>
           </View>
         </View>
 
         <View style={styles.infoBox}>
           <IconSymbol name="info.circle.fill" size={24} color={colors.primary} />
           <Text style={styles.infoText}>
-            This app is designed for Raspberry Pi OS and helps staff manage orders and complete training modules efficiently.
+            This app is designed for Raspberry Pi OS and helps staff manage 3D print orders, track printer status, and complete training modules efficiently.
           </Text>
         </View>
       </ScrollView>
@@ -244,6 +274,60 @@ const styles = StyleSheet.create({
   activityTime: {
     fontSize: 13,
     color: colors.textSecondary,
+  },
+  printerStatus: {
+    marginBottom: 24,
+  },
+  printerCard: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+    elevation: 2,
+  },
+  printerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  printerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  printerName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  statusDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  printerStatus: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: colors.highlight,
+    borderRadius: 3,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: 3,
+  },
+  printerTime: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontWeight: '500',
   },
   infoBox: {
     flexDirection: 'row',

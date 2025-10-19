@@ -33,83 +33,83 @@ interface TrainingModule {
 const INITIAL_MODULES: TrainingModule[] = [
   {
     id: '1',
-    title: 'Customer Service Basics',
-    description: 'Learn the fundamentals of excellent customer service',
-    duration: '15 min',
-    category: 'Customer Service',
+    title: '3D Printer Safety & Maintenance',
+    description: 'Essential safety protocols and daily maintenance procedures',
+    duration: '20 min',
+    category: 'Safety',
     completed: true,
     progress: 100,
     content: {
       sections: [
         {
-          title: 'Introduction',
-          content: 'Customer service is the backbone of any successful business. In this module, you will learn the essential skills needed to provide exceptional service to every customer.',
+          title: 'Safety First',
+          content: 'Working with 3D printers requires attention to safety. Always ensure proper ventilation, never touch the hot end during or immediately after printing, and wear safety glasses when removing support material. Keep the work area clean and organized.',
         },
         {
-          title: 'Key Principles',
-          content: '1. Always greet customers with a smile\n2. Listen actively to their needs\n3. Be patient and understanding\n4. Offer solutions, not excuses\n5. Follow up to ensure satisfaction',
+          title: 'Daily Maintenance',
+          content: '1. Check bed leveling before each print\n2. Clean the build plate with isopropyl alcohol\n3. Inspect nozzle for clogs or debris\n4. Verify filament is properly loaded\n5. Check all belts for proper tension\n6. Lubricate linear rails weekly',
         },
         {
-          title: 'Best Practices',
-          content: 'Always maintain a positive attitude, even in challenging situations. Remember that every customer interaction is an opportunity to build loyalty and trust.',
+          title: 'Emergency Procedures',
+          content: 'In case of fire, use the emergency stop button immediately and use a Class D fire extinguisher. Never use water on electrical fires. If the printer makes unusual noises or smells, stop the print immediately and notify your supervisor.',
         },
       ],
     },
   },
   {
     id: '2',
-    title: 'Point of Sale System',
-    description: 'Master the POS system for efficient order processing',
-    duration: '20 min',
+    title: 'Filament Types & Materials',
+    description: 'Understanding different materials and their applications',
+    duration: '25 min',
     category: 'Technical',
     completed: false,
     progress: 60,
     content: {
       sections: [
         {
-          title: 'Getting Started',
-          content: 'The Point of Sale (POS) system is your primary tool for processing orders. This training will cover all essential functions.',
+          title: 'Common Materials',
+          content: 'PLA (Polylactic Acid) is the most common material - easy to print, biodegradable, and great for prototypes. ABS offers higher strength and heat resistance. PETG combines the best of both with good strength and ease of printing. TPU is flexible for specialized applications.',
         },
         {
-          title: 'Processing Orders',
-          content: '1. Select items from the menu\n2. Apply any discounts or promotions\n3. Choose payment method\n4. Print receipt\n5. Complete the transaction',
+          title: 'Material Properties',
+          content: 'PLA: Print temp 190-220°C, bed temp 50-60°C\nABS: Print temp 220-250°C, bed temp 80-110°C\nPETG: Print temp 220-250°C, bed temp 70-80°C\nTPU: Print temp 210-230°C, bed temp 30-60°C\n\nAlways check manufacturer specifications for exact temperatures.',
         },
         {
-          title: 'Troubleshooting',
-          content: 'If you encounter any issues with the POS system, first try restarting the application. If problems persist, contact your supervisor immediately.',
+          title: 'Storage & Handling',
+          content: 'Store filament in airtight containers with desiccant to prevent moisture absorption. Label all spools with material type and color. Rotate stock using FIFO method. Dry filament before use if it has been exposed to humidity.',
         },
       ],
     },
   },
   {
     id: '3',
-    title: 'Food Safety & Hygiene',
-    description: 'Essential food safety practices and hygiene standards',
-    duration: '25 min',
-    category: 'Safety',
+    title: 'Slicing Software Basics',
+    description: 'Master the slicer software for optimal print quality',
+    duration: '30 min',
+    category: 'Technical',
     completed: false,
     progress: 0,
     content: {
       sections: [
         {
-          title: 'Food Safety Basics',
-          content: 'Food safety is critical to protecting our customers and maintaining our reputation. This module covers essential safety practices.',
+          title: 'Introduction to Slicing',
+          content: 'Slicing software converts 3D models into instructions (G-code) that the printer can understand. We use industry-standard slicing software that offers precise control over every aspect of the print.',
         },
         {
-          title: 'Personal Hygiene',
-          content: '1. Wash hands frequently and thoroughly\n2. Wear clean uniforms\n3. Keep hair tied back\n4. No jewelry except plain wedding bands\n5. Cover any cuts or wounds',
+          title: 'Key Settings',
+          content: 'Layer Height: 0.1-0.3mm (lower = better quality, longer print time)\nInfill: 10-20% for most parts, 50%+ for functional parts\nSupports: Enable for overhangs greater than 45°\nPrint Speed: 40-60mm/s for quality, up to 100mm/s for drafts\nWall Thickness: Minimum 2-3 perimeters',
         },
         {
-          title: 'Food Handling',
-          content: 'Always check expiration dates, store food at proper temperatures, avoid cross-contamination, and follow FIFO (First In, First Out) principles.',
+          title: 'Quality Control',
+          content: 'Always preview the sliced model before printing. Check for proper support placement, verify estimated print time and material usage, and ensure the model is properly oriented on the build plate for optimal strength and surface finish.',
         },
       ],
     },
   },
   {
     id: '4',
-    title: 'Conflict Resolution',
-    description: 'Handle difficult situations with confidence',
+    title: 'Customer Service & Order Management',
+    description: 'Best practices for handling customer orders and inquiries',
     duration: '18 min',
     category: 'Customer Service',
     completed: false,
@@ -117,16 +117,41 @@ const INITIAL_MODULES: TrainingModule[] = [
     content: {
       sections: [
         {
-          title: 'Understanding Conflict',
-          content: 'Conflicts are a natural part of customer service. The key is to handle them professionally and turn negative situations into positive outcomes.',
+          title: 'Taking Orders',
+          content: 'When receiving a new order, verify all specifications: material type, color, quantity, and deadline. Discuss any design modifications needed for printability. Provide accurate time and cost estimates. Always confirm order details in writing.',
         },
         {
-          title: 'De-escalation Techniques',
-          content: '1. Stay calm and composed\n2. Listen without interrupting\n3. Acknowledge their concerns\n4. Apologize sincerely\n5. Offer solutions\n6. Know when to involve management',
+          title: 'Managing Expectations',
+          content: '1. Be honest about turnaround times\n2. Explain material limitations clearly\n3. Show examples of similar work\n4. Discuss post-processing options\n5. Set realistic quality expectations\n6. Communicate any delays immediately',
         },
         {
-          title: 'Follow-up',
-          content: 'After resolving a conflict, document the incident and follow up with the customer to ensure their satisfaction.',
+          title: 'Quality Assurance',
+          content: 'Inspect every print before delivery. Check for layer adhesion, dimensional accuracy, and surface finish. Remove all support material carefully. Clean parts with compressed air. Package items securely to prevent damage during transport.',
+        },
+      ],
+    },
+  },
+  {
+    id: '5',
+    title: 'Troubleshooting Common Issues',
+    description: 'Identify and resolve common 3D printing problems',
+    duration: '35 min',
+    category: 'Technical',
+    completed: false,
+    progress: 0,
+    content: {
+      sections: [
+        {
+          title: 'Print Adhesion Problems',
+          content: 'If prints are not sticking to the bed: Re-level the bed, clean the build surface thoroughly, increase bed temperature by 5-10°C, use adhesion aids like glue stick or hairspray, or reduce first layer speed to 20mm/s.',
+        },
+        {
+          title: 'Layer Issues',
+          content: 'Stringing: Lower print temperature, increase retraction distance\nWarping: Increase bed temperature, use enclosure, add brim\nLayer shifting: Check belt tension, reduce print speed\nUnder-extrusion: Check for clogs, increase flow rate, verify filament diameter',
+        },
+        {
+          title: 'When to Ask for Help',
+          content: 'Contact your supervisor if: The printer makes grinding or clicking noises, you smell burning plastic or electronics, the hot end temperature fluctuates wildly, you encounter repeated print failures, or you are unsure about any procedure. Safety first!',
         },
       ],
     },

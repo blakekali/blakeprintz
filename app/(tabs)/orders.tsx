@@ -15,12 +15,14 @@ import { IconSymbol } from '@/components/IconSymbol';
 import { colors } from '@/styles/commonStyles';
 import * as Haptics from 'expo-haptics';
 
-type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled';
+type OrderStatus = 'pending' | 'printing' | 'completed' | 'cancelled';
 
 interface Order {
   id: string;
   customerName: string;
   items: string;
+  material: string;
+  printTime: string;
   total: number;
   status: OrderStatus;
   date: string;
@@ -29,27 +31,46 @@ interface Order {
 
 const INITIAL_ORDERS: Order[] = [
   {
-    id: '001',
-    customerName: 'John Smith',
-    items: '2x Coffee, 1x Sandwich',
-    total: 15.50,
+    id: '3DP-001',
+    customerName: 'TechCorp Industries',
+    items: 'Custom Bracket (x5), Gear Assembly (x2)',
+    material: 'PLA',
+    printTime: '4h 30m',
+    total: 125.50,
     status: 'pending',
     date: new Date().toLocaleDateString(),
+    notes: 'High priority - needed by Friday',
   },
   {
-    id: '002',
-    customerName: 'Sarah Johnson',
-    items: '1x Salad, 1x Juice',
-    total: 12.00,
-    status: 'processing',
+    id: '3DP-002',
+    customerName: 'Design Studio LLC',
+    items: 'Prototype Housing, Button Caps (x10)',
+    material: 'ABS',
+    printTime: '6h 15m',
+    total: 189.00,
+    status: 'printing',
     date: new Date().toLocaleDateString(),
+    notes: 'Client will pick up in person',
   },
   {
-    id: '003',
-    customerName: 'Mike Davis',
-    items: '3x Pizza Slice, 2x Soda',
-    total: 22.50,
+    id: '3DP-003',
+    customerName: 'Robotics Lab',
+    items: 'Robot Arm Components (x8)',
+    material: 'PETG',
+    printTime: '12h 45m',
+    total: 345.75,
     status: 'completed',
+    date: new Date(Date.now() - 86400000).toLocaleDateString(),
+    notes: 'Quality check completed',
+  },
+  {
+    id: '3DP-004',
+    customerName: 'Maker Space',
+    items: 'Educational Models (x15)',
+    material: 'PLA',
+    printTime: '8h 20m',
+    total: 210.00,
+    status: 'printing',
     date: new Date().toLocaleDateString(),
   },
 ];
@@ -64,7 +85,7 @@ export default function OrdersScreen() {
     switch (status) {
       case 'pending':
         return '#ff9800';
-      case 'processing':
+      case 'printing':
         return colors.secondary;
       case 'completed':
         return '#4caf50';
@@ -79,7 +100,7 @@ export default function OrdersScreen() {
     switch (status) {
       case 'pending':
         return 'clock.fill';
-      case 'processing':
+      case 'printing':
         return 'arrow.clockwise';
       case 'completed':
         return 'checkmark.circle.fill';
@@ -118,7 +139,7 @@ export default function OrdersScreen() {
   const statusCounts = {
     all: orders.length,
     pending: orders.filter(o => o.status === 'pending').length,
-    processing: orders.filter(o => o.status === 'processing').length,
+    printing: orders.filter(o => o.status === 'printing').length,
     completed: orders.filter(o => o.status === 'completed').length,
     cancelled: orders.filter(o => o.status === 'cancelled').length,
   };
@@ -126,7 +147,7 @@ export default function OrdersScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Order Management</Text>
+        <Text style={styles.headerTitle}>3D Print Orders</Text>
         <Text style={styles.headerSubtitle}>
           {filteredOrders.length} {filterStatus === 'all' ? 'total' : filterStatus} orders
         </Text>
@@ -138,7 +159,7 @@ export default function OrdersScreen() {
         style={styles.filterContainer}
         contentContainerStyle={styles.filterContent}
       >
-        {(['all', 'pending', 'processing', 'completed', 'cancelled'] as const).map(status => (
+        {(['all', 'pending', 'printing', 'completed', 'cancelled'] as const).map(status => (
           <Pressable
             key={status}
             style={[
@@ -204,10 +225,20 @@ export default function OrdersScreen() {
 
             <View style={styles.orderBody}>
               <View style={styles.customerInfo}>
-                <IconSymbol name="person.fill" size={16} color={colors.textSecondary} />
+                <IconSymbol name="building.2.fill" size={16} color={colors.textSecondary} />
                 <Text style={styles.customerName}>{order.customerName}</Text>
               </View>
               <Text style={styles.orderItems}>{order.items}</Text>
+              <View style={styles.orderMeta}>
+                <View style={styles.metaItem}>
+                  <IconSymbol name="cube.fill" size={14} color={colors.textSecondary} />
+                  <Text style={styles.metaText}>{order.material}</Text>
+                </View>
+                <View style={styles.metaItem}>
+                  <IconSymbol name="clock.fill" size={14} color={colors.textSecondary} />
+                  <Text style={styles.metaText}>{order.printTime}</Text>
+                </View>
+              </View>
             </View>
 
             <View style={styles.orderFooter}>
@@ -257,6 +288,16 @@ export default function OrdersScreen() {
                   </View>
 
                   <View style={styles.detailSection}>
+                    <Text style={styles.detailLabel}>Material</Text>
+                    <Text style={styles.detailValue}>{selectedOrder.material}</Text>
+                  </View>
+
+                  <View style={styles.detailSection}>
+                    <Text style={styles.detailLabel}>Estimated Print Time</Text>
+                    <Text style={styles.detailValue}>{selectedOrder.printTime}</Text>
+                  </View>
+
+                  <View style={styles.detailSection}>
                     <Text style={styles.detailLabel}>Total</Text>
                     <Text style={styles.detailValue}>${selectedOrder.total.toFixed(2)}</Text>
                   </View>
@@ -265,6 +306,13 @@ export default function OrdersScreen() {
                     <Text style={styles.detailLabel}>Date</Text>
                     <Text style={styles.detailValue}>{selectedOrder.date}</Text>
                   </View>
+
+                  {selectedOrder.notes && (
+                    <View style={styles.detailSection}>
+                      <Text style={styles.detailLabel}>Notes</Text>
+                      <Text style={styles.detailValue}>{selectedOrder.notes}</Text>
+                    </View>
+                  )}
 
                   <View style={styles.detailSection}>
                     <Text style={styles.detailLabel}>Current Status</Text>
@@ -293,7 +341,7 @@ export default function OrdersScreen() {
                   <View style={styles.statusActions}>
                     <Text style={styles.statusActionsTitle}>Update Status</Text>
                     <View style={styles.statusButtonsGrid}>
-                      {(['pending', 'processing', 'completed', 'cancelled'] as OrderStatus[]).map(
+                      {(['pending', 'printing', 'completed', 'cancelled'] as OrderStatus[]).map(
                         status => (
                           <Pressable
                             key={status}
@@ -451,6 +499,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textSecondary,
     lineHeight: 20,
+    marginBottom: 8,
+  },
+  orderMeta: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  metaText: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontWeight: '500',
   },
   orderFooter: {
     flexDirection: 'row',

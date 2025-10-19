@@ -27,8 +27,8 @@ export default function ProfileScreen() {
               <IconSymbol name="person.fill" size={48} color={colors.card} />
             </View>
           </View>
-          <Text style={styles.name}>Staff Member</Text>
-          <Text style={styles.role}>Team Member</Text>
+          <Text style={styles.name}>3D Print Operator</Text>
+          <Text style={styles.role}>Production Team Member</Text>
         </View>
 
         <View style={styles.section}>
@@ -79,13 +79,27 @@ export default function ProfileScreen() {
           
           <View style={styles.statsCard}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>156</Text>
-              <Text style={styles.statLabel}>Orders Completed</Text>
+              <Text style={styles.statValue}>47</Text>
+              <Text style={styles.statLabel}>Prints Completed</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>3/4</Text>
+              <Text style={styles.statValue}>1/5</Text>
               <Text style={styles.statLabel}>Training Complete</Text>
+            </View>
+          </View>
+
+          <View style={styles.certificationsCard}>
+            <Text style={styles.certificationsTitle}>Certifications</Text>
+            <View style={styles.certificationItem}>
+              <IconSymbol name="checkmark.seal.fill" size={20} color="#4caf50" />
+              <Text style={styles.certificationText}>3D Printer Safety Certified</Text>
+            </View>
+            <View style={styles.certificationItem}>
+              <IconSymbol name="clock.fill" size={20} color={colors.textSecondary} />
+              <Text style={[styles.certificationText, { color: colors.textSecondary }]}>
+                Advanced Materials - In Progress
+              </Text>
             </View>
           </View>
         </View>
@@ -121,6 +135,19 @@ export default function ProfileScreen() {
 
           <Pressable
             style={styles.menuItem}
+            onPress={() => handlePress('Safety Guidelines')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.accent + '20' }]}>
+                <IconSymbol name="exclamationmark.shield.fill" size={24} color={colors.accent} />
+              </View>
+              <Text style={styles.menuItemText}>Safety Guidelines</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+
+          <Pressable
+            style={styles.menuItem}
             onPress={() => handlePress('About')}
           >
             <View style={styles.menuItemLeft}>
@@ -141,7 +168,7 @@ export default function ProfileScreen() {
           <Text style={styles.logoutButtonText}>Logout</Text>
         </Pressable>
 
-        <Text style={styles.version}>Version 1.0.0</Text>
+        <Text style={styles.version}>Version 1.0.0 - 3D Print Manager</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -229,6 +256,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 20,
+    marginBottom: 12,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
     elevation: 2,
   },
@@ -251,6 +279,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textSecondary,
     textAlign: 'center',
+  },
+  certificationsCard: {
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+    elevation: 2,
+  },
+  certificationsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 12,
+  },
+  certificationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 8,
+  },
+  certificationText: {
+    fontSize: 14,
+    color: colors.text,
   },
   logoutButton: {
     flexDirection: 'row',

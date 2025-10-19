@@ -1,15 +1,16 @@
 
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
+// Color scheme for 3D Printing Business
 export const colors = {
-  background: '#f9f9f9',
+  background: '#f5f5f5',
   text: '#212121',
   textSecondary: '#757575',
-  primary: '#03a9f4',
-  secondary: '#00bcd4',
-  accent: '#ff4081',
+  primary: '#2196f3',      // Blue - represents technology and precision
+  secondary: '#00bcd4',    // Cyan - represents innovation
+  accent: '#ff5722',       // Deep Orange - represents heat/printing
   card: '#ffffff',
-  highlight: '#bbdefb',
+  highlight: '#e3f2fd',    // Light blue highlight
 };
 
 export const buttonStyles = StyleSheet.create({
