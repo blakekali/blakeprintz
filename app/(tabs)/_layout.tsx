@@ -6,7 +6,7 @@ import { Stack } from 'expo-router';
 import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
 import { TabBarVisibilityProvider } from '@/contexts/TabBarVisibilityContext';
 
-export default function TabLayout() {
+function TabLayoutContent() {
   const tabs: TabBarItem[] = [
     {
       name: '(home)',
@@ -58,7 +58,7 @@ export default function TabLayout() {
   }
 
   return (
-    <TabBarVisibilityProvider>
+    <>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -71,6 +71,14 @@ export default function TabLayout() {
         <Stack.Screen name="profile" />
       </Stack>
       <FloatingTabBar tabs={tabs} />
+    </>
+  );
+}
+
+export default function TabLayout() {
+  return (
+    <TabBarVisibilityProvider>
+      <TabLayoutContent />
     </TabBarVisibilityProvider>
   );
 }
