@@ -1,91 +1,279 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
-import { GlassView } from "expo-glass-effect";
-import { useTheme } from "@react-navigation/native";
+import React from "react";
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable } from "react-native";
+import { colors } from "@/styles/commonStyles";
+import * as Haptics from "expo-haptics";
 
 export default function ProfileScreen() {
-  const theme = useTheme();
+  const handlePress = (action: string) => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    console.log(`${action} pressed`);
+  };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
-        style={styles.container}
-        contentContainerStyle={[
-          styles.contentContainer,
-          Platform.OS !== 'ios' && styles.contentContainerWithTabBar
-        ]}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <GlassView style={[
-          styles.profileHeader,
-          Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-        ]} glassEffectStyle="regular">
-          <IconSymbol name="person.circle.fill" size={80} color={theme.colors.primary} />
-          <Text style={[styles.name, { color: theme.colors.text }]}>John Doe</Text>
-          <Text style={[styles.email, { color: theme.dark ? '#98989D' : '#666' }]}>john.doe@example.com</Text>
-        </GlassView>
+        <View style={styles.header}>
+          <View style={styles.avatarContainer}>
+            <View style={styles.avatar}>
+              <IconSymbol name="person.fill" size={48} color={colors.card} />
+            </View>
+          </View>
+          <Text style={styles.name}>Staff Member</Text>
+          <Text style={styles.role}>Team Member</Text>
+        </View>
 
-        <GlassView style={[
-          styles.section,
-          Platform.OS !== 'ios' && { backgroundColor: theme.dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-        ]} glassEffectStyle="regular">
-          <View style={styles.infoRow}>
-            <IconSymbol name="phone.fill" size={20} color={theme.dark ? '#98989D' : '#666'} />
-            <Text style={[styles.infoText, { color: theme.colors.text }]}>+1 (555) 123-4567</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Account</Text>
+          
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('Edit Profile')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.primary + '20' }]}>
+                <IconSymbol name="person.circle.fill" size={24} color={colors.primary} />
+              </View>
+              <Text style={styles.menuItemText}>Edit Profile</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('Change Password')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.secondary + '20' }]}>
+                <IconSymbol name="lock.fill" size={24} color={colors.secondary} />
+              </View>
+              <Text style={styles.menuItemText}>Change Password</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('Notifications')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.accent + '20' }]}>
+                <IconSymbol name="bell.fill" size={24} color={colors.accent} />
+              </View>
+              <Text style={styles.menuItemText}>Notifications</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Performance</Text>
+          
+          <View style={styles.statsCard}>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>156</Text>
+              <Text style={styles.statLabel}>Orders Completed</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>3/4</Text>
+              <Text style={styles.statLabel}>Training Complete</Text>
+            </View>
           </View>
-          <View style={styles.infoRow}>
-            <IconSymbol name="location.fill" size={20} color={theme.dark ? '#98989D' : '#666'} />
-            <Text style={[styles.infoText, { color: theme.colors.text }]}>San Francisco, CA</Text>
-          </View>
-        </GlassView>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Support</Text>
+          
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('Help Center')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.primary + '20' }]}>
+                <IconSymbol name="questionmark.circle.fill" size={24} color={colors.primary} />
+              </View>
+              <Text style={styles.menuItemText}>Help Center</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('Contact Support')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.secondary + '20' }]}>
+                <IconSymbol name="envelope.fill" size={24} color={colors.secondary} />
+              </View>
+              <Text style={styles.menuItemText}>Contact Support</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+
+          <Pressable
+            style={styles.menuItem}
+            onPress={() => handlePress('About')}
+          >
+            <View style={styles.menuItemLeft}>
+              <View style={[styles.menuIcon, { backgroundColor: colors.textSecondary + '20' }]}>
+                <IconSymbol name="info.circle.fill" size={24} color={colors.textSecondary} />
+              </View>
+              <Text style={styles.menuItemText}>About</Text>
+            </View>
+            <IconSymbol name="chevron.right" size={20} color={colors.textSecondary} />
+          </Pressable>
+        </View>
+
+        <Pressable
+          style={styles.logoutButton}
+          onPress={() => handlePress('Logout')}
+        >
+          <IconSymbol name="arrow.right.square.fill" size={24} color="#ffffff" />
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </Pressable>
+
+        <Text style={styles.version}>Version 1.0.0</Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    // backgroundColor handled dynamically
-  },
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
-  contentContainer: {
-    padding: 20,
+  scrollView: {
+    flex: 1,
   },
-  contentContainerWithTabBar: {
-    paddingBottom: 100, // Extra padding for floating tab bar
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 100,
   },
-  profileHeader: {
+  header: {
     alignItems: 'center',
-    borderRadius: 12,
-    padding: 32,
+    paddingVertical: 32,
+  },
+  avatarContainer: {
     marginBottom: 16,
-    gap: 12,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+    elevation: 4,
   },
   name: {
     fontSize: 24,
-    fontWeight: 'bold',
-    // color handled dynamically
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 4,
   },
-  email: {
+  role: {
     fontSize: 16,
-    // color handled dynamically
+    color: colors.textSecondary,
   },
   section: {
-    borderRadius: 12,
-    padding: 20,
-    gap: 12,
+    marginBottom: 24,
   },
-  infoRow: {
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 8,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+    elevation: 2,
+  },
+  menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  infoText: {
+  menuIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuItemText: {
     fontSize: 16,
-    // color handled dynamically
+    fontWeight: '500',
+    color: colors.text,
+  },
+  statsCard: {
+    flexDirection: 'row',
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 20,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+    elevation: 2,
+  },
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statDivider: {
+    width: 1,
+    backgroundColor: colors.highlight,
+    marginHorizontal: 16,
+  },
+  statValue: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: colors.primary,
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    backgroundColor: colors.accent,
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 8,
+    marginBottom: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    elevation: 2,
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  version: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 8,
   },
 });
